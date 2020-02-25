@@ -6,15 +6,33 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/modules")
 
 set(CMAKE_CXX_STANDARD 17)
 
+
+## Clang Tidy
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+list(APPEND RUN_CLANG_TIDY_BIN_ARGS
+    -clang-tidy-binary ${CLANG_TIDY_BIN}
+    -header-filter=.*
+    -checks=clan*,cert*,misc*,perf*,cppc*,read*,mode*,-cert-err58-cpp,-misc-noexcept-move-constructor
+)
+
+add_custom_target(
+    tidy
+    COMMAND ${RUN_CLANG_TIDY_BIN} ${RUN_CLANG_TIDY_BIN_ARGS}
+    COMMENT "running clang tidy"
+)
+
+##########
+
 # pre-requisites
 # find_package(Threads REQUIRED)
 # find_package(RT REQUIRED)
 
-file(GLOB HEADERS ${PROJECT_SOURCE_DIR}/src/*.h)
-file(GLOB SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp)
+file(GLOB HEADERS ${PROJECT_SOURCE_DIR}/include/*.h)
+file(GLOB SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp ${PROJECT_SOURCE_DIR}/src/*.h)
 add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION 1)

@@ -1,4 +1,6 @@
-project(BenchProject)
+project(Benchmark)
+
+set(CMAKE_CXX_STANDARD 17)
 
 include(ExternalProject)
 
@@ -16,10 +18,10 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${EXTERNAL_INSTALL_LOCATION}/include)
 link_directories(${EXTERNAL_INSTALL_LOCATION}/lib)
 
-file(GLOB APP_SOURCES ${CMAKE_SOURCE_DIR}/src/*.h)
-file(GLOB TEST_SOURCES ${CMAKE_SOURCE_DIR}/benchmarks/*.cpp ${CMAKE_SOURCE_DIR}/benchmarks/*.h)
+file(GLOB APP_SOURCES ${CMAKE_SOURCE_DIR}/src/*.cpp ${CMAKE_SOURCE_DIR}/src/*.h)
+file(GLOB TEST_SOURCES ${CMAKE_SOURCE_DIR}/benchmark/*.cpp ${CMAKE_SOURCE_DIR}/benchmark/*.h)
 
-add_executable(bench ${APP_SOURCES} ${TEST_SOURCES})
-add_dependencies(bench benchmark)
-target_link_libraries(bench libbenchmark.a )
-target_link_libraries(bench pthread)
+add_executable(${PROJECT_NAME} ${APP_SOURCES} ${TEST_SOURCES})
+add_dependencies(${PROJECT_NAME} benchmark)
+target_link_libraries(${PROJECT_NAME} libbenchmark.a )
+target_link_libraries(${PROJECT_NAME} pthread)
